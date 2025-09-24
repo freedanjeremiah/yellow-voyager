@@ -2,12 +2,33 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px;
+    padding: 2rem;
     background: var(--card-background);
-    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
+    box-shadow: var(--shadow-xl);
+    min-width: 280px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.reputationContainer:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
+    opacity: 0.8;
+}
+
+.reputationContainer:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl), var(--accent-glow);
+    border-color: var(--accent-color);
 }
 
 .loading {
@@ -40,10 +61,16 @@
 }
 
 .reputationScore {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent-color);
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     line-height: 1;
+    text-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+    letter-spacing: -0.02em;
 }
 
 .reputationLabel {

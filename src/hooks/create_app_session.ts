@@ -1,33 +1,44 @@
-import { useCallback } from 'react';
-import type { Hex } from 'viem'; // Assuming Hex type is available
+import { useCallback } from 'preact/hooks';
+import type { Address } from 'viem';
+import { nitroliteStore } from '@/store';
+import { nitroliteWebSocket } from '@/websocket';
+import type { ReputationSessionData } from '../types/reputation';
 
-import {
-    createAppSessionMessage,
-    parseCreateAppSessionResponse,
-} from '@erc7824/nitrolite';
-import type { RPCAppDefinition, RPCAppSessionAllocation } from '@erc7824/nitrolite';
-import { WalletSigner } from '@/websocket/crypto';
-import { useSnapshot } from 'valtio';
-import { SettingsStore } from '@/store';
+// Mock the @erc7824/nitrolite functions for development
+const createAppSessionMessage = async (signer: any, appDefinition: any) => {
+    return JSON.stringify({
+        method: 'create_app_session',
+        params: { app_definition: appDefinition },
+        id: Date.now(),
+        sig: ['mock_signature']
+    });
+};
 
-const DEFAULT_PROTOCOL = 'nitroliterpc';
-const DEFAULT_WEIGHTS = [100, 0];
-const DEFAULT_QUORUM = 100;
+const parseCreateAppSessionResponse = (response: string) => {
+    const parsed = JSON.parse(response);
+    return { app_session_id: parsed.params?.app_session_id || `session_${Date.now()}` };
+};
+
+const DEFAULT_PROTOCOL = 'reputation_nitrolite_v1';
+const DEFAULT_QUORUM = 80;
 
 /**
- * Hook for creating an application session using createAppSessionMessage.
+ * Hook for creating a reputation application session.
  */
-export function useCreateApplicationSession() {
-    const activeChainId = useSnapshot(SettingsStore.state).activeChain.id;
-
-    const createApplicationSession = useCallback(
+export function useCreateReputationSession() {
+    const createReputationSession = useCallback(
         async (
-            signer: WalletSigner,
-            sendRequest: (payload: string) => Promise<string>,
-            participantA: string,
-            participantB: string,
-            amount: string,
-        ) => {
+            participants: Address[],
+            category: string = 'reputation_scoring'
+        ): Promise<{ success: boolean; sessionId?: string; error?: string }> => {
+            try {
+                const currentUser = nitroliteStore.session.currentUser;
+                if (!currentUser || !nitroliteStore.session.isAuthenticated) {
+                    return { success: false, error: 'User not authenticated' };
+                }
+
+                const allParticipants = [currentUser, ...participants];
+                const weights = allParticipants.map(() => 100 / allParticipants.length);
             try {
                 if (!activeChainId) {
                     throw new Error('Active chain ID is not set.');

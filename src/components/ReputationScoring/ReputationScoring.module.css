@@ -1,0 +1,363 @@
+.scoringContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.scoringHeader {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.headerTop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.headerTop h2 {
+    color: var(--text-color);
+    margin: 0;
+    font-size: 2rem;
+}
+
+.backButton {
+    position: absolute;
+    left: 0;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.backButton:hover {
+    background: var(--secondary-hover);
+    transform: translateY(-1px);
+}
+
+.category {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.category strong {
+    color: var(--accent-color);
+}
+
+.participantCount {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 5px 0 0 0;
+}
+
+.notAuthenticated {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--card-background);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.notAuthenticated h2 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.notAuthenticated p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.descriptionSection {
+    margin-bottom: 30px;
+}
+
+.label {
+    display: block;
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-background);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb), 0.1);
+}
+
+.participantsList {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.participantCard {
+    background: var(--card-background);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.participantCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.participantHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.participantInfo h3 {
+    color: var(--text-color);
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+}
+
+.participantAddress {
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.currentReputation {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.overallScore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--accent-color);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    min-width: 80px;
+}
+
+.overallNumber {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.overallLabel {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+}
+
+.scoreInputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.scoreItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.scoreLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.scoreIcon {
+    font-size: 1.1rem;
+}
+
+.scoreControl {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.scoreSlider {
+    flex: 1;
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    outline: none;
+    appearance: none;
+}
+
+.scoreSlider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.scoreSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.scoreSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.scoreSlider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+.scoreValue {
+    font-weight: 600;
+    color: var(--accent-color);
+    font-size: 1rem;
+    min-width: 30px;
+    text-align: center;
+    background: rgba(var(--accent-color-rgb), 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.evidenceSection {
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.evidenceInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--background-color);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
+}
+
+.evidenceInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb), 0.1);
+}
+
+.submitSection {
+    text-align: center;
+    padding: 30px 20px;
+    background: var(--background-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.submitButton {
+    background: var(--success-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.submitButton:hover:not(:disabled) {
+    background: var(--success-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--success-color-rgb), 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submitNote {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .scoringContainer {
+        padding: 15px;
+    }
+    
+    .headerTop {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .backButton {
+        position: static;
+        align-self: flex-start;
+    }
+    
+    .participantCard {
+        padding: 20px;
+    }
+    
+    .participantHeader {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .scoreInputs {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .submitButton {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}

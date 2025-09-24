@@ -43,10 +43,15 @@ export const useAppSessionManager = (
 
     const createReputationSession = useCallback(
         async (participants: Address[], category: string): Promise<CreateAppSessionResult> => {
+            console.log('🚀 createReputationSession called:', { participants, category });
+            
             if (!sessionKey || !isAuthenticated || !currentUser) {
-                return { success: false, error: 'Not authenticated' };
+                const error = 'Not authenticated or missing session key';
+                console.error('❌ createReputationSession error:', error);
+                return { success: false, error };
             }
 
+            console.log('✅ Prerequisites met, starting session creation...');
             setIsCreatingSession(true);
             try {
                 // Ensure current user is included in participants
@@ -64,16 +69,19 @@ export const useAppSessionManager = (
                 };
 
                 const result = await createAppSession(params, sessionKey, currentUser);
+                console.log('📊 createAppSession result:', result);
                 
                 if (result.success && result.appSessionId) {
                     setCurrentSessionId(result.appSessionId);
-                    console.log(`Created reputation session: ${result.appSessionId} for category: ${category}`);
+                    console.log(`✅ Created reputation session: ${result.appSessionId} for category: ${category}`);
+                } else {
+                    console.error('❌ Failed to create session:', result.error);
                 }
                 
                 return result;
                 
             } catch (error) {
-                console.error('Failed to create reputation session:', error);
+                console.error('💥 Exception in createReputationSession:', error);
                 return { 
                     success: false, 
                     error: error instanceof Error ? error.message : 'Unknown error'
@@ -91,10 +99,15 @@ export const useAppSessionManager = (
             reputationData: ReputationSessionData, 
             allocations?: any[]
         ): Promise<SubmitAppStateResult> => {
+            console.log('🚀 submitReputationState called:', { sessionId, reputationData, allocations });
+            
             if (!sessionKey || !isAuthenticated) {
-                return { success: false, error: 'Not authenticated' };
+                const error = 'Not authenticated or missing session key';
+                console.error('❌ submitReputationState error:', error);
+                return { success: false, error };
             }
-
+            
+            console.log('✅ Prerequisites met, starting state submission...');
             setIsSubmittingState(true);
             try {
                 const params: SubmitAppStateParams = {
@@ -102,11 +115,15 @@ export const useAppSessionManager = (
                     sessionData: reputationData,
                     allocations: allocations || [] // Optional allocations
                 };
-
+                
+                console.log('📦 Calling submitAppState with params:', params);
                 const result = await submitAppState(params, sessionKey);
+                console.log('📊 submitAppState result:', result);
                 
                 if (result.success) {
-                    console.log(`Submitted reputation state for session: ${sessionId}`);
+                    console.log(`✅ Submitted reputation state for session: ${sessionId}`);
+                } else {
+                    console.error('❌ Failed to submit state:', result.error);
                 }
                 
                 return result;

@@ -33,11 +33,15 @@ class WebSocketService {
         };
 
         this.socket.onmessage = (event) => {
+            console.log('📨 WebSocket message received:', event.data);
+            
             try {
                 const data = JSON.parse(event.data);
+                console.log('🔍 Parsed message:', data);
+                console.log('👥 Notifying', this.messageListeners.size, 'listeners...');
                 this.messageListeners.forEach((listener) => listener(data));
             } catch (error) {
-                console.error('Error parsing message:', error);
+                console.error('❌ Error parsing message:', error);
             }
         };
 
@@ -47,9 +51,14 @@ class WebSocketService {
     }
 
     public send(payload: string) {
+        console.log('📤 WebSocket send called. Status:', this.socket?.readyState);
+        console.log('📦 Payload preview:', payload.substring(0, 200) + '...');
+        
         if (this.socket?.readyState === WebSocket.OPEN) {
+            console.log('✅ WebSocket is open, sending message...');
             this.socket.send(payload);
         } else {
+            console.log('⏳ WebSocket not ready, queueing message. Current state:', this.socket?.readyState);
             this.messageQueue.push(payload);
         }
     }

@@ -1,70 +1,160 @@
-# Nitrolite-Example
+# Voyager - Global Reputation System
 
-This project demonstrates how to build high-throughput, low-latency Web3 applications.
+**Voyager is a global reputation system—powered by Yellow SDK and Nitrolite Protocol—that creates a unified reputation layer that's secure, interoperable, and privacy-preserving. Users earn verifiable reputation tokens through activity, peer endorsements, and stake-weighted metrics.**
 
-The core goal is to show how to use `@erc7824/nitrolite`, a state channel framework for EVM chains, to enable off-chain interactions with on-chain security. This allows you to build a user experience with instant finality that feels as responsive as a traditional Web2 application.
+## 🌟 Project Overview
 
-## Workshop Goal
+Voyager leverages the power of state channels through `@erc7824/nitrolite` to create a high-throughput, low-latency reputation platform. This enables instant reputation scoring and peer review capabilities with on-chain security guarantees, delivering a Web2-like user experience while maintaining Web3 decentralization principles.
 
-In this workshop, we will use a sample content platform application as a practical example. We will walk through the process of integrating Nitrolite to enable features like instant microtransactions. The principles you learn here can be applied to any dApp to significantly improve user experience by removing transaction friction.
+### Key Features
 
-## Technology Stack
+- **Instant Reputation Reviews**: Create and submit reputation reviews with zero-latency using state channels
+- **Multi-Party Sessions**: Secure session management for reviewer-reviewee interactions
+- **Real-time Updates**: WebSocket-based live updates for reputation scores and reviews
+- **EIP-712 Authentication**: Secure wallet-based authentication without gas fees
+- **Interoperable Design**: Built on Yellow SDK for cross-chain compatibility
+
+## 🛠 Technology Stack
 
 - **Framework:** Preact with Hooks
-- **Language:** TypeScript
+- **Language:** TypeScript  
 - **Build Tool:** Vite
-- **Styling:** CSS Modules
-- **Key Library:** `@erc7824/nitrolite`
+- **Styling:** Modern CSS with glassmorphism effects
+- **State Channels:** `@erc7824/nitrolite` v0.3.0
+- **Web3 Integration:** Viem for wallet connectivity
+- **Real-time:** WebSocket communication
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or later)
-- A WebSocket RPC endpoint for Nitrolite.
+- MetaMask or compatible Web3 wallet
+- Access to Yellow Network WebSocket endpoint
 
 ### Installation & Setup
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/freedanjeremiah/yellow-voyager.git
+   cd yellow-voyager
+   ```
 
-    ```bash
-    git clone <your-repo-url>
-    cd nitrolite-example
-    ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-2.  **Install dependencies:**
+3. **Set up environment variables:**
+   Create `.env.local` in the project root:
+   ```env
+   VITE_NITROLITE_WS_URL=wss://clearnet.yellow.com/ws
+   ```
 
-    ```bash
-    npm install
-    ```
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:5173`
 
-3.  **Set up environment variables:**
-    Create a file named `.env.local` in the root of the project and add your Nitrolite WebSocket URL:
+## 📊 Live Demo & Session Details
 
-    ```env
-    # .env.local
-    VITE_NITROLITE_WS_URL=wss://your-rpc-endpoint.com/ws
-    ```
+### Primary Wallet Address
+**`0x50e7677f41070098B062c6270fC325aC6A43F698`**
+- Contains channel creation and session management
+- Used for demonstration and testing purposes
 
-4.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
-    The application will be available at `http://localhost:5173` (or the next available port).
+### Active Session Address  
+**`0x46ec05f3a2fcae3404f128d2e7450089f07d615ebc343e05b582c69c4f6f47fc`**
 
-## Workshop Chapters
+🔗 **Monitor Live Sessions:** [https://ynscan.xyz/sessions](https://ynscan.xyz/sessions)
 
-This repository uses branches to guide you through the workshop. You can switch between branches to see the code evolve at each stage.
+## 🌿 Branch Structure
 
-- `main`: The initial project setup.
-- `chapter-1-wallet-connect`: Solution for Chapter 1 (Connecting to a user's wallet).
-- `chapter-2-ws-connection`: Solution for Chapter 2 (Initializing the WebSocket connection).
-- `chapter-3-session-auth`: Solution for Chapter 3 (Authenticating the session via WebSocket).
-- `chapter-4-display-balances`: Solution for Chapter 4 (Fetching and displaying asset balances).
-- `final-p2p-transfer`: The final, completed application with peer-to-peer transfers.
+### Main Branches
 
-## Note for Presenters
+- **`reputation`** (current): Full reputation system implementation with step-by-step review UI
+- **`playground`**: Complete functional branch demonstrating all core actions:
+  - Session creation and management
+  - Session closure workflows  
+  - Application state management
+  - Real-time reputation scoring
 
-A special `presenter` branch is available for conducting the live workshop.
+### Development Branches
 
-This branch contains the final, completed code, but the logic for **Chapter 3 onwards** is commented out in sequential blocks. To present, stay on this branch and uncomment each block as you progress through the workshop. This ensures a smooth, typo-free demonstration. The `chapter-*` branches serve as clean checkpoints for attendees.
+- **`main`**: Initial project foundation
+- **`chapter-1-wallet-connect`**: Wallet integration implementation
+- **`chapter-2-ws-connection`**: WebSocket connectivity setup
+- **`chapter-3-session-auth`**: EIP-712 authentication system
+- **`chapter-4-display-balances`**: Balance fetching and display
+
+## 🔧 Related Repositories
+
+### Hooks Improvement
+**[checks-unstable](https://github.com/freedanjeremiah/checks-unstable)** - Advanced hooks and utilities repository focused on improving the core session management and state handling capabilities of the Voyager reputation system.
+
+## 💡 Core Features Demonstration
+
+### 1. Reputation Review Process
+- **Step 1**: Connect wallet and authenticate via EIP-712
+- **Step 2**: Enter reviewee address (0x...)  
+- **Step 3**: Set reputation parameters (score 1-10, review type)
+- **Step 4**: Write detailed review comments
+- **Step 5**: Create session and submit review instantly
+
+### 2. Session Management
+- Create multi-party reputation sessions
+- Real-time session state synchronization  
+- Secure session closure with finalization
+- Channel-based communication for scalability
+
+### 3. Real-time Updates
+- Live WebSocket connection status
+- Instant balance and reputation updates
+- Real-time session participant notifications
+- Live reputation score calculations
+
+## 🏗 Architecture
+
+```
+Voyager Reputation Platform
+├── Frontend (Preact + TypeScript)
+├── State Channels (Nitrolite Protocol)
+├── Authentication (EIP-712 Signatures) 
+├── Real-time Communication (WebSocket)
+└── Yellow SDK Integration
+```
+
+### Key Components
+
+- **Session Manager**: Handles multi-party reputation sessions
+- **Authentication System**: EIP-712 based secure login
+- **Review Wizard**: Step-by-step reputation review interface
+- **Real-time Engine**: WebSocket-based live updates
+- **Reputation Calculator**: Stake-weighted scoring algorithms
+
+## 🔐 Security Features
+
+- **Zero Gas Authentication**: EIP-712 signatures for gasless login
+- **State Channel Security**: On-chain dispute resolution capabilities  
+- **Privacy Preservation**: Selective disclosure of reputation data
+- **Verifiable Reviews**: Cryptographic proof of review authenticity
+
+## 📈 Reputation Metrics
+
+Users earn reputation through:
+- **Direct Reviews**: Peer-to-peer reputation scoring (1-10)
+- **Activity Metrics**: Platform engagement and participation
+- **Stake Weighting**: Reputation value based on staked tokens
+- **Cross-chain Recognition**: Interoperable reputation across networks
+
+## 🌐 Network Integration
+
+- **Primary Network**: Yellow Network
+- **Session Explorer**: ynscan.xyz for live session monitoring
+- **WebSocket Endpoint**: wss://clearnet.yellow.com/ws
+- **Cross-chain Support**: Via Yellow SDK compatibility layer
+
+---
+
+**Built with 💛 by the Yellow Network ecosystem**

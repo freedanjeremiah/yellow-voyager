@@ -44,6 +44,9 @@ import {
     removeJWT,
     type SessionKey,
 } from './lib/utils';
+// Step-by-step Review UI
+import { ReviewWizard } from './components/ReviewWizard';
+import './components/ReviewWizard/ReviewWizard.css';
 
 function safeStringify(value: unknown) {
     return JSON.stringify(value, (_key, v) => (typeof v === 'bigint' ? v.toString() : v), 2);
@@ -95,6 +98,28 @@ export function App() {
     const [getSessionsResult, setGetSessionsResult] = useState<string>('');
     const [closeSessionId, setCloseSessionId] = useState<string>('');
     const [closeResult, setCloseResult] = useState<string>('');
+
+    // Reputation UI state for step-by-step review (UI-only, does not change logic)
+    const [reviewText, setReviewText] = useState<string>('');
+    const [reputationType, setReputationType] = useState<string>('general');
+
+    // Step-by-step review process state (UI-only)
+    const [currentReviewStep, setCurrentReviewStep] = useState<number>(0);
+    const [reviewStepsCompleted, setReviewStepsCompleted] = useState<boolean[]>([false, false, false, false, false]);
+
+    const markStepCompleted = (stepIndex: number) => {
+        const next = [...reviewStepsCompleted];
+        next[stepIndex] = true;
+        setReviewStepsCompleted(next);
+    };
+
+    // Auto-mark steps complete based on existing state
+    useEffect(() => {
+        if (isAuthenticated) markStepCompleted(0);
+        if (participantB.length > 0) markStepCompleted(1);
+        if (amount.length > 0 && reputationType.length > 0) markStepCompleted(2);
+        if (reviewText.length > 10) markStepCompleted(3);
+    }, [isAuthenticated, participantB, amount, reputationType, reviewText]);
 
     // App State UI state
     const [appStateValue, setAppStateValue] = useState<string>('{"counter":1}');
@@ -621,79 +646,112 @@ export function App() {
                 {transferStatus && (
                     <div className="transfer-status">
                         {transferStatus}
-                    </div>
+                    </div> // Fixed JSX closing tag typo
                 )}
                 
-                {/* App Session Controls */}
-                <section style={{ marginTop: 24 }}>
-                    <h3>Application Sessions</h3>
-                    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <input
-                            type="text"
-                            placeholder="Participant B (0x...)"
-                            value={participantB}
-                            onInput={(e: any) => setParticipantB(e.currentTarget.value)}
-                            style={{ padding: '8px 12px' }}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Amount (USDC)"
-                            value={amount}
-                            onInput={(e: any) => setAmount(e.currentTarget.value)}
-                            style={{ padding: '8px 12px', width: 120 }}
-                        />
-                        <button onClick={handleCreateAppSession} disabled={!isAuthenticated}>
-                            Create App Session
-                        </button>
-                        <button onClick={handleGetSessions} disabled={!isAuthenticated}>
-                            Get App Sessions
-                        </button>
-                        <input
-                            type="text"
-                            placeholder="App Session ID"
-                            value={closeSessionId}
-                            onInput={(e: any) => setCloseSessionId(e.currentTarget.value)}
-                            style={{ padding: '8px 12px', width: 320 }}
-                        />
-                        <button onClick={handleCloseSession} disabled={!isAuthenticated}>
-                            Close App Session
-                        </button>
-                    </div>
-                    <div style={{ marginTop: 12, display: 'grid', gap: 8 }}>
-                        {createResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{createResult}</pre>}
-                        {getSessionsResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{getSessionsResult}</pre>}
-                        {closeResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{closeResult}</pre>}
-                    </div>
-                </section>
+                {/* Step-by-step Review Wizard (UI-only; uses existing handlers) */}
+                <ReviewWizard
+                    currentStep={currentReviewStep}
+                    stepsCompleted={reviewStepsCompleted}
+                    onStepChange={setCurrentReviewStep}
+                    onStepComplete={markStepCompleted}
+                    isAuthenticated={isAuthenticated}
+                    participantB={participantB}
+                    amount={amount}
+                    reputationType={reputationType}
+                    reviewText={reviewText}
+                    onParticipantBChange={setParticipantB}
+                    onAmountChange={setAmount}
+                    onReputationTypeChange={setReputationType}
+                    onReviewTextChange={setReviewText}
+                    onCreateSession={handleCreateAppSession}
+                    onGetSessions={handleGetSessions}
+                    onCloseSession={handleCloseSession}
+                    onSubmitReview={handleSubmitAppState}
+                    closeSessionId={closeSessionId}
+                    onCloseSessionIdChange={setCloseSessionId}
+                    createResult={createResult}
+                    getSessionsResult={getSessionsResult}
+                    closeResult={closeResult}
+                    submitStateResult={submitStateResult}
+                    appStateValue={appStateValue}
+                    onAppStateValueChange={setAppStateValue}
+                />
 
-                {/* App State Controls */}
-                <section style={{ marginTop: 24 }}>
-                    <h3>Application State</h3>
-                    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <input
-                            type="text"
-                            placeholder="State JSON or text"
-                            value={appStateValue}
-                            onInput={(e: any) => setAppStateValue(e.currentTarget.value)}
-                            style={{ padding: '8px 12px', width: 360 }}
-                        />
-                        <button onClick={handleSubmitAppState} disabled={!isAuthenticated || !closeSessionId}>
-                            Submit App State
-                        </button>
-                        <button onClick={handleGetChannels} disabled={!isAuthenticated}>
-                            Get Channels
-                        </button>
-                        <button onClick={handleGetRPCHistory} disabled={!isAuthenticated}>
-                            Get RPC History
-                        </button>
-                    </div>
-                    <div style={{ marginTop: 12, display: 'grid', gap: 8 }}>
-                        {submitStateResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{submitStateResult}</pre>}
-                        {getStateResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{getStateResult}</pre>}
-                        {channelsResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{channelsResult}</pre>}
-                        {rpcHistoryResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{rpcHistoryResult}</pre>}
-                    </div>
-                </section>
+                {/* Keep existing controls for power users without changing logic */}
+                <details>
+                    <summary>Advanced Developer Controls</summary>
+                    {/* App Session Controls */}
+                    <section style={{ marginTop: 24 }}>
+                        <h3>Application Sessions</h3>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <input
+                                type="text"
+                                placeholder="Participant B (0x...)"
+                                value={participantB}
+                                onInput={(e: any) => setParticipantB(e.currentTarget.value)}
+                                style={{ padding: '8px 12px' }}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Amount (USDC)"
+                                value={amount}
+                                onInput={(e: any) => setAmount(e.currentTarget.value)}
+                                style={{ padding: '8px 12px', width: 120 }}
+                            />
+                            <button onClick={handleCreateAppSession} disabled={!isAuthenticated}>
+                                Create App Session
+                            </button>
+                            <button onClick={handleGetSessions} disabled={!isAuthenticated}>
+                                Get App Sessions
+                            </button>
+                            <input
+                                type="text"
+                                placeholder="App Session ID"
+                                value={closeSessionId}
+                                onInput={(e: any) => setCloseSessionId(e.currentTarget.value)}
+                                style={{ padding: '8px 12px', width: 320 }}
+                            />
+                            <button onClick={handleCloseSession} disabled={!isAuthenticated}>
+                                Close App Session
+                            </button>
+                        </div>
+                        <div style={{ marginTop: 12, display: 'grid', gap: 8 }}>
+                            {createResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{createResult}</pre>}
+                            {getSessionsResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{getSessionsResult}</pre>}
+                            {closeResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{closeResult}</pre>}
+                        </div>
+                    </section>
+
+                    {/* App State Controls */}
+                    <section style={{ marginTop: 24 }}>
+                        <h3>Application State</h3>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <input
+                                type="text"
+                                placeholder="State JSON or text"
+                                value={appStateValue}
+                                onInput={(e: any) => setAppStateValue(e.currentTarget.value)}
+                                style={{ padding: '8px 12px', width: 360 }}
+                            />
+                            <button onClick={handleSubmitAppState} disabled={!isAuthenticated || !closeSessionId}>
+                                Submit App State
+                            </button>
+                            <button onClick={handleGetChannels} disabled={!isAuthenticated}>
+                                Get Channels
+                            </button>
+                            <button onClick={handleGetRPCHistory} disabled={!isAuthenticated}>
+                                Get RPC History
+                            </button>
+                        </div>
+                        <div style={{ marginTop: 12, display: 'grid', gap: 8 }}>
+                            {submitStateResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{submitStateResult}</pre>}
+                            {getStateResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{getStateResult}</pre>}
+                            {channelsResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{channelsResult}</pre>}
+                            {rpcHistoryResult && <pre style={{ whiteSpace: 'pre-wrap' }}>{rpcHistoryResult}</pre>}
+                        </div>
+                    </section>
+                </details>
                 
                 {/* Removed PostList and mock data */}
             </main>

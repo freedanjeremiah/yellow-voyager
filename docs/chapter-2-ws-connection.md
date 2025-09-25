@@ -161,8 +161,8 @@ export function App() {
         <div className="app-container">
             <header className="header">
                 <div className="header-content">
-                    <h1 className="logo">Nexus</h1>
-                    <p className="tagline">Decentralized insights for the next generation of builders</p>
+                    <h1 className="logo">Voyager</h1>
+                    <p className="tagline">Every person's global reputation system</p>
                 </div>
                 <div className="header-controls">
                     <div className={`ws-status ${wsStatus.toLowerCase()}`}>

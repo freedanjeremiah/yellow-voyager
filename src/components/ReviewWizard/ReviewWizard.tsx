@@ -83,7 +83,7 @@ export function ReviewWizard(props: ReviewWizardProps) {
         {
             id: 2,
             title: "Set Review Parameters",
-            description: "Choose the review type and set the reputation score (1-10)",
+            description: "Choose the review type and set the reputation score (0-10)",
             isCompleted: stepsCompleted[2],
             isActive: currentStep === 2
         },
@@ -107,7 +107,7 @@ export function ReviewWizard(props: ReviewWizardProps) {
         switch (stepIndex) {
             case 0: return isAuthenticated;
             case 1: return participantB.length > 0 && participantB.startsWith('0x');
-            case 2: return amount.length > 0 && parseFloat(amount) >= 1 && parseFloat(amount) <= 10 && reputationType.length > 0;
+            case 2: return amount.length > 0 && parseFloat(amount) >= 0 && parseFloat(amount) <= 10 && reputationType.length > 0;
             case 3: return reviewText.length > 10;
             case 4: return true;
             default: return false;
@@ -194,18 +194,18 @@ export function ReviewWizard(props: ReviewWizardProps) {
                     <div className="step-content">
                         <div className="step-info">
                             <h4>⭐ Set Review Parameters</h4>
-                            <p>Choose the type of review and assign a reputation score from 1 to 10.</p>
+                            <p>Choose the type of review and assign a reputation score from 0 to 10.</p>
                         </div>
                         <div className="form-row">
                             <div className="form-group">
-                                <label htmlFor="reputation-score">Reputation Score (1-10)</label>
+                                <label htmlFor="reputation-score">Reputation Score (0-10)</label>
                                 <input
                                     id="reputation-score"
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     max="10"
                                     step="0.1"
-                                    placeholder="5.0"
+                                    placeholder="5.0 (0 allowed)"
                                     value={amount}
                                     onInput={(e: any) => onAmountChange(e.currentTarget.value)}
                                 />
@@ -226,9 +226,9 @@ export function ReviewWizard(props: ReviewWizardProps) {
                                 </select>
                             </div>
                         </div>
-                        {amount && (parseFloat(amount) < 1 || parseFloat(amount) > 10) && (
+                        {amount && (parseFloat(amount) < 0 || parseFloat(amount) > 10) && (
                             <div className="error-message">
-                                ⚠️ Please enter a score between 1 and 10
+                                ⚠️ Please enter a score between 0 and 10
                             </div>
                         )}
                     </div>
@@ -366,7 +366,7 @@ export function ReviewWizard(props: ReviewWizardProps) {
     return (
         <div className="review-wizard">
             <div className="wizard-header">
-                <h3>Review Creation Wizard</h3>
+                <h3>Post a Review  </h3>
                 <p>Follow these steps to create and submit a reputation review</p>
             </div>
 

@@ -58,14 +58,14 @@ declare global {
     }
 }
 
-// CHAPTER 3: EIP-712 domain for Nexus authentication
+// CHAPTER 3: EIP-712 domain for Voyager authentication
 const getAuthDomain = () => ({
-    name: 'Nexus',
+    name: 'Voyager',
 });
 
 // CHAPTER 3: Authentication constants
-const AUTH_SCOPE = 'nexus.app';
-const APP_NAME = 'Nexus';
+const AUTH_SCOPE = 'Voyager.app';
+const APP_NAME = 'Voyager';
 const SESSION_DURATION = 3600; // 1 hour
 
 // Defaults for app sessions
@@ -107,6 +107,10 @@ export function App() {
     const [currentReviewStep, setCurrentReviewStep] = useState<number>(0);
     const [reviewStepsCompleted, setReviewStepsCompleted] = useState<boolean[]>([false, false, false, false, false]);
 
+    // UI automation guards
+    const [autoSessionTriggered, setAutoSessionTriggered] = useState<boolean>(false);
+    const [autoSubmitTriggered, setAutoSubmitTriggered] = useState<boolean>(false);
+
     const markStepCompleted = (stepIndex: number) => {
         const next = [...reviewStepsCompleted];
         next[stepIndex] = true;
@@ -120,6 +124,51 @@ export function App() {
         if (amount.length > 0 && reputationType.length > 0) markStepCompleted(2);
         if (reviewText.length > 10) markStepCompleted(3);
     }, [isAuthenticated, participantB, amount, reputationType, reviewText]);
+
+    // Reset automation guards on key changes
+    useEffect(() => {
+        setAutoSessionTriggered(false);
+    }, [participantB]);
+
+    useEffect(() => {
+        setAutoSubmitTriggered(false);
+    }, [closeSessionId]);
+
+    // Auto-start session after entering reviewee details
+    useEffect(() => {
+        const validAddress = participantB && participantB.startsWith('0x') && participantB.length === 42;
+        if (isAuthenticated && validAddress && !autoSessionTriggered) {
+            // Call existing logic without modifying it
+            handleCreateAppSession();
+            setAutoSessionTriggered(true);
+        }
+    }, [isAuthenticated, participantB, autoSessionTriggered]);
+
+    // Build review JSON into appStateValue as inputs change
+    useEffect(() => {
+        const reviewPayload = {
+            reviewer: account ?? undefined,
+            reviewee: participantB || undefined,
+            score: amount !== '' ? Number(amount) : undefined,
+            category: reputationType || undefined,
+            comments: reviewText || undefined,
+            timestamp: Date.now(),
+        };
+        try {
+            setAppStateValue(JSON.stringify(reviewPayload, (_k, v) => (typeof v === 'bigint' ? v.toString() : v), 2));
+        } catch {
+            // ignore JSON stringify errors
+        }
+    }, [account, participantB, amount, reputationType, reviewText]);
+
+    // Auto-submit application state after writing review comments
+    useEffect(() => {
+        const canSubmit = isAuthenticated && closeSessionId && reviewText.length > 10 && !autoSubmitTriggered;
+        if (canSubmit) {
+            handleSubmitAppState();
+            setAutoSubmitTriggered(true);
+        }
+    }, [isAuthenticated, closeSessionId, reviewText, autoSubmitTriggered]);
 
     // App State UI state
     const [appStateValue, setAppStateValue] = useState<string>('{"counter":1}');
@@ -612,8 +661,8 @@ export function App() {
         <div className="app-container">
             <header className="header">
                 <div className="header-content">
-                    <h1 className="logo">Nexus</h1>
-                    <p className="tagline">Decentralized insights for the next generation of builders</p>
+                    <h1 className="logo">Voyager</h1>
+                    <p className="tagline">Every person's global reputation system</p>
                 </div>
                 <div className="header-controls">
                     {/* CHAPTER 4: Display balance when authenticated */}

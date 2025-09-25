@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "nexus-tipping-dapp",
+      "name": "Voyager-tipping-dapp",
       "dependencies": {
         "@erc7824/nitrolite": "^0.3.0",
         "preact": "^10.26.9",

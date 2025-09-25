@@ -145,9 +145,9 @@ export function App() {
             const authParams: AuthRequestParams = {
                 address: account,
                 session_key: sessionKey.address,
-                app_name: 'Nexus',
+                app_name: 'Voyager',
                 expire: expireTimestamp,
-                scope: 'nexus.app',
+                scope: 'Voyager.app',
                 application: account,
                 allowances: [],
             };
@@ -202,7 +202,7 @@ export function App() {
                 const expireTimestamp = String(Math.floor(Date.now() / 1000) + SESSION_DURATION_SECONDS);
 
                 const authParams = {
-                    scope: 'nexus.app',
+                    scope: 'Voyager.app',
                     application: walletClient.account?.address as `0x${string}`,
                     participant: sessionKey.address as `0x${string}`,
                     expire: expireTimestamp,
@@ -210,7 +210,7 @@ export function App() {
                 };
 
                 const eip712Signer = createEIP712AuthMessageSigner(walletClient, authParams, {
-                    name: 'Nexus',
+                    name: 'Voyager',
                 });
 
                 try {
@@ -311,7 +311,7 @@ export function App() {
         <div className="app-container">
             <header className="header">
                 <div className="header-content">
-                    <h1 className="logo">Nexus</h1>
+                    <h1 className="logo">Voyager</h1>
                     <p className="tagline">
                         <span>The Content Platform of Tomorrow</span>
                     </p>

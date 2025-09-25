@@ -8,7 +8,7 @@ export interface SessionKey {
 }
 
 // Session key management
-const SESSION_KEY_STORAGE = 'nexus_session_key';
+const SESSION_KEY_STORAGE = 'Voyager_session_key';
 
 export const generateSessionKey = (): SessionKey => {
     const privateKey = generatePrivateKey();
@@ -47,7 +47,7 @@ export const removeSessionKey = (): void => {
 };
 
 // JWT helpers
-const JWT_KEY = 'nexus_jwt_token';
+const JWT_KEY = 'Voyager_jwt_token';
 
 export const getStoredJWT = (): string | null => {
     try {
